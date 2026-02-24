@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>花尾鸽-个人主页</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080b10;
+      --surface: #0d1117;
+      --surface2: #161b22;
+      --border: #21262d;
+      --border2: #30363d;
+      --accent: #58a6ff;
+      --accent2: #79c0ff;
+      --green: #3fb950;
+      --orange: #f0883e;
+      --purple: #a371f7;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --text3: #484f58;
+      --glow: rgba(88,166,255,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── GRID LINES ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(88,166,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(88,166,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 56px;
+      background: rgba(8,11,16,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-logo span { color: var(--text3); }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text2);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 4px 10px;
+      border: 1px solid var(--green);
+      color: var(--green);
+      border-radius: 20px;
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 80px 80px;
+      overflow: hidden;
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-left { display: flex; flex-direction: column; justify-content: center; }
+
+    .hero-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(42px, 5vw, 72px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+
+    h1 .line2 {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text2);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 40px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent2);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(88,166,255,0.3);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: transparent;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border2);
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* TERMINAL WIDGET */
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .terminal {
+      width: 100%;
+      max-width: 520px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(88,166,255,0.05);
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green { background: #28c840; }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    .terminal-body {
+      padding: 20px 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .t-comment { color: var(--text3); }
+    .t-key { color: var(--purple); }
+    .t-str { color: var(--orange); }
+    .t-num { color: var(--green); }
+    .t-accent { color: var(--accent); }
+    .t-bracket { color: var(--text2); }
+
+    /* SCROLL INDICATOR */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      animation: bob 2s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── STATS ROW ── */
+    .stats-bar {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .stat-item {
+      padding: 32px 40px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--text) 0%, var(--text2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 80px;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 60px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 60px;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--text2);
+      line-height: 1.8;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    .about-text strong { color: var(--text); font-weight: 600; }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .skill-chip {
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .skill-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(88,166,255,0.05);
+    }
+
+    .skill-chip .dot-skill {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+
+    /* ── PROJECT ── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .project-card:hover {
+      border-color: rgba(88,166,255,0.4);
+      box-shadow: 0 0 40px rgba(88,166,255,0.08);
+      transform: translateY(-2px);
+    }
+
+    .project-header {
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .project-info h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .project-info p {
+      color: var(--text2);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 600px;
+    }
+
+    .project-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+
+    .badge-blue { background: rgba(88,166,255,0.12); color: var(--accent); border: 1px solid rgba(88,166,255,0.25); }
+    .badge-green { background: rgba(63,185,80,0.12); color: var(--green); border: 1px solid rgba(63,185,80,0.25); }
+    .badge-orange { background: rgba(240,136,62,0.12); color: var(--orange); border: 1px solid rgba(240,136,62,0.25); }
+    .badge-purple { background: rgba(163,113,247,0.12); color: var(--purple); border: 1px solid rgba(163,113,247,0.25); }
+
+    /* FEATURE LIST */
+    .feature-list {
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .feature-icon {
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .feature-text strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .feature-text span {
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    /* SCREENSHOTS */
+    .screenshots {
+      padding: 28px 32px;
+    }
+
+    .screenshots-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .screenshot-frame {
+      aspect-ratio: 16/9;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .screenshot-frame:hover { border-color: var(--accent); transform: scale(1.01); }
+    .screenshot-frame:hover .ss-overlay { opacity: 1; }
+
+    .ss-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ss-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(88,166,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      font-size: 22px;
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      position: fixed;
+      z-index: 1000;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      padding: 40px;
+    }
+    
+    .lightbox.active {
+      display: flex;
+      opacity: 1;
+    }
+    
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 90vh;
+      border-radius: 8px;
+      box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
+    
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      color: #fff;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    
+    .lightbox-close:hover { color: var(--accent); }
+    
+    #lightbox-caption {
+      position: absolute;
+      bottom: 20px;
+      left: 0; right: 0;
+      text-align: center;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+    }
+
+
+    /* PROJECT LINKS */
+    .project-links {
+      padding: 20px 32px;
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .project-links span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text3);
+      margin-right: auto;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .contact-card {
+      padding: 28px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .contact-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .contact-icon {
+      width: 48px; height: 48px;
+      border-radius: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .contact-info strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .contact-info span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .contact-note {
+      margin-top: 48px;
+      padding: 24px;
+      background: rgba(63,185,80,0.05);
+      border: 1px solid rgba(63,185,80,0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .contact-note p {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    .contact-note strong { color: var(--green); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 32px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    footer p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    /* ── FADE IN ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      #hero { padding: 100px 24px 60px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-right { display: none; }
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      section { padding: 60px 24px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .feature-list { grid-template-columns: 1fr 1fr; }
+      .screenshots-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .project-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <!-- <div class="nav-logo"><span>//</span> dev.portfolio</div> -->
+  <ul class="nav-links">
+    <li><a href="#about">关于我</a></li>
+    <li><a href="#project">项目</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+  <div class="nav-badge">● 求职中</div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid">
+    <div class="hero-left">
+      <div class="hero-tag">全栈开发者 · 大三学生</div>
+      <h1>
+        构建云端<br/>
+        <span class="line2">Windows体验</span>
+      </h1>
+      <p class="hero-desc">
+        热爱前后端工程与系统设计。独立完成了基于 Vue3 + TypeScript 的
+        Win10 概念云电脑项目，涵盖前端 UI、后端服务与实时监控系统。
+        正在寻找 <strong style="color:var(--text)">前端 / 全栈实习</strong> 机会。
+      </p>
+      <div class="hero-cta">
+        <a href="#project" class="btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          查看项目
+        </a>
+        <a href="#contact" class="btn-outline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          联系我
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+          <div class="terminal-title">profile.json</div>
+        </div>
+        <div class="terminal-body">
+          <span class="t-bracket">{</span><br/>
+          &nbsp;&nbsp;<span class="t-key">"name"</span><span class="t-bracket">:</span> <span class="t-str">"花尾鸽"</span><span class="t-bracket">,</span><br/>
+          &nbsp;&nbsp;<span class="t-key">"role"</span><span class="t-bracket">:</span> <span class="t-str">"全栈开发者"</span><span class="t-bracket">,</span><br/>
+          &nbsp;&nbsp;<span class="t-key">"status"</span><span class="t-bracket">:</span> <span class="t-str">"<span style="color:var(--green)">seeking internship</span>"</span><span class="t-bracket">,</span><br/>
+          &nbsp;&nbsp;<span class="t-key">"stack"</span><span class="t-bracket">:</span> <span class="t-bracket">[</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Vue3"</span><span class="t-bracket">,</span> <span class="t-str">"TypeScript"</span><span class="t-bracket">,</span><br/>
+          <!-- &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"Spring Boot"</span><span class="t-bracket">,</span> <span class="t-str">"MySQL"</span><br/> -->
+          &nbsp;&nbsp;<span class="t-bracket">],</span><br/>
+          &nbsp;&nbsp;<span class="t-key">"project"</span><span class="t-bracket">:</span> <span class="t-bracket">{</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"name"</span><span class="t-bracket">:</span> <span class="t-str">"Win10 Cloud PC"</span><span class="t-bracket">,</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"type"</span><span class="t-bracket">:</span> <span class="t-str">"全栈"</span><span class="t-bracket">,</span><br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-key">"frontend"</span><span class="t-bracket">:</span> <span class="t-str">"开源中 🚀"</span><br/>
+          &nbsp;&nbsp;<span class="t-bracket">},</span><br/>
+          &nbsp;&nbsp;<span class="t-key">"available"</span><span class="t-bracket">:</span> <span class="t-num">true</span><br/>
+          <span class="t-bracket">}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+    scroll
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item fade-in">
+    <div class="stat-num">1</div>
+    <div class="stat-label">全栈项目</div>
+  </div>
+  <div class="stat-item fade-in">
+    <div class="stat-num">6+</div>
+    <div class="stat-label">核心功能模块</div>
+  </div>
+  <div class="stat-item fade-in">
+    <div class="stat-num">2</div>
+    <div class="stat-label">开发角色</div>
+  </div>
+  <div class="stat-item fade-in">
+    <div class="stat-num">开源</div>
+    <div class="stat-label">前端即将发布</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 — about</div>
+  <h2 class="section-title">关于我</h2>
+  <div class="about-grid">
+    <div class="about-text fade-in">
+      <p>
+        大三专科生，专注于 <strong>Web 全栈开发</strong>。对前后端工程有浓厚热情，
+        能够独立将设计理念落地为高质量的交互界面。
+      </p>
+      <p>
+        主项目为 <strong>Win10 概念云电脑</strong>，在前端完整复刻了 Windows 桌面体验，
+        用户可在浏览器内完成文件上传、下载、管理等操作，如同操作本地系统。
+        后端提供实时流量监控与管理员控制台，支持多用户并发访问。
+      </p>
+      <p>
+        目前正在寻找 <strong>前端 / 全栈实习机会</strong>，希望在真实业务场景中
+        深化工程能力，欢迎联系沟通。
+      </p>
+    </div>
+    <div class="skills-grid fade-in">
+      <div class="skill-chip"><div class="dot-skill"></div>Vue 3</div>
+      <div class="skill-chip"><div class="dot-skill"></div>TypeScript</div>
+      <div class="skill-chip"><div class="dot-skill"></div>Node.js</div>
+      <div class="skill-chip"><div class="dot-skill"></div>MySQL</div>
+      <div class="skill-chip"><div class="dot-skill"></div>WebSocket</div>
+      <div class="skill-chip"><div class="dot-skill"></div>Pinia / Vuex</div>
+      <div class="skill-chip"><div class="dot-skill"></div>Vite</div>
+      <div class="skill-chip"><div class="dot-skill"></div>Element Plus</div>
+      <div class="skill-chip"><div class="dot-skill"></div>Docker</div>
+      <div class="skill-chip"><div class="dot-skill"></div>Git / GitHub</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT -->
+<section id="project">
+  <div class="section-label">02 — projects</div>
+  <h2 class="section-title">项目展示</h2>
+
+  <div class="project-card fade-in">
+    <!-- HEADER -->
+    <div class="project-header">
+      <div class="project-info">
+        <h3>🖥️ Win10 概念云电脑</h3>
+        <p>
+          仿 Windows 10 桌面 UI 的全栈云文件管理系统。用户可在浏览器中
+          体验与本地 Windows 一致的操作逻辑：文件资源管理器、拖拽上传、
+          右键菜单、任务栏等。管理员端提供实时在线用户监控与流量仪表盘。
+        </p>
+      </div>
+      <div class="project-badges">
+        <span class="badge badge-blue">Vue3</span>
+        <span class="badge badge-blue">TypeScript</span>
+        <span class="badge badge-orange">Node.js</span>
+        <span class="badge badge-green">全栈</span>
+        <span class="badge badge-purple">前端开源</span>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon">📁</div>
+        <div class="feature-text">
+          <strong>文件资源管理器</strong>
+          <span>仿 Win10 交互，支持上传、下载、重命名、删除</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">👥</div>
+        <div class="feature-text">
+          <strong>实时用户监控</strong>
+          <span>管理员可查看实时在线用户列表与活动状态</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div class="feature-text">
+          <strong>流量监控仪表盘</strong>
+          <span>上传 / 下载流量可视化，按用户/时段统计</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-text">
+          <strong>设备权限管理</strong>
+          <span>管理员可对用户设备进行权限授权与撤销</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">☁️</div>
+        <div class="feature-text">
+          <strong>云端文件存储</strong>
+          <span>用户文件持久化存储，随时随地访问</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <strong>WebSocket 实时通信</strong>
+          <span>在线状态与通知实时推送，低延迟体验</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREENSHOTS -->
+    <div class="screenshots">
+      <div class="screenshots-label">UI 截图预览（点击查看大图）</div>
+      <div class="screenshots-grid" id="screenshots-grid">
+        <!-- 
+          To add your own screenshots:
+          1. Place your image files in the 'images' folder (e.g., images/screenshot1.png)
+          2. Update the src attribute below to point to your image file
+        -->
+        
+        <!-- Screenshot 1 -->
+        <div class="screenshot-frame" onclick="openLightbox(this)">
+          <img src="images/desktop.png" alt="Windows 桌面主界面" class="ss-img" onerror="this.src='https://placehold.co/800x450/1e1e2e/58a6ff?text=Desktop+UI+Preview'">
+          <div class="ss-overlay">🔍</div>
+        </div>
+
+        <!-- Screenshot 2 -->
+        <div class="screenshot-frame" onclick="openLightbox(this)">
+          <img src="images/admin.png" alt="管理员监控面板" class="ss-img" onerror="this.src='https://placehold.co/800x450/0a0f1a/58a6ff?text=Admin+Monitor+Preview'">
+          <div class="ss-overlay">🔍</div>
+        </div>
+
+        <!-- Screenshot 3 -->
+        <div class="screenshot-frame" onclick="openLightbox(this)">
+          <img src="images/traffic.png" alt="流量监控图表" class="ss-img" onerror="this.src='https://placehold.co/800x450/0d1117/58a6ff?text=Traffic+Chart+Preview'">
+          <div class="ss-overlay">🔍</div>
+        </div>
+
+        <!-- Add more screenshots here if needed -->
+        <!-- 
+        <div class="screenshot-frame" onclick="openLightbox(this)">
+          <img src="images/your-screenshot.png" alt="Description" class="ss-img">
+          <div class="ss-overlay">🔍</div>
+        </div> 
+        -->
+
+      </div>
+    </div>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+      <span class="lightbox-close">&times;</span>
+      <img class="lightbox-content" id="lightbox-img">
+      <div id="lightbox-caption"></div>
+    </div>
+
+    <!-- PROJECT LINKS -->
+    <div class="project-links">
+      <span>链接</span>
+      <a href="#" class="btn-outline" style="padding:8px 16px; font-size:12px" id="github-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        GitHub (前端开源)
+      </a>
+      <a href="https://119.29.76.58" class="btn-primary" style="padding:8px 16px; font-size:12px" id="demo-link" target="_blank" rel="noopener noreferrer">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        在线 Demo
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">03 — contact</div>
+  <h2 class="section-title">联系我</h2>
+
+  <div class="contact-grid fade-in">
+    <a href="mailto:your@email.com" class="contact-card">
+      <div class="contact-icon">✉️</div>
+      <div class="contact-info">
+        <strong>邮箱</strong>
+        <span>3313488199@qq.com</span>
+      </div>
+    </a>
+    <a href="https://github.com/yourusername" class="contact-card" target="_blank">
+      <div class="contact-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--text2)"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+      </div>
+      <div class="contact-info">
+        <strong>GitHub</strong>
+        <span>https://github.com/naming5457</span>
+      </div>
+    </a>
+    <a href="https://www.linkedin.com/in/yourprofile" class="contact-card" target="_blank">
+      <div class="contact-icon">💼</div>
+      <div class="contact-info">
+        <strong>抖音</strong>
+        <span>花尾鸽  COH3CCP</span>
+      </div>
+    </a>
+    <a href="tel:+86-xxx-xxxx-xxxx" class="contact-card">
+      <div class="contact-icon">📱</div>
+      <div class="contact-info">
+        <strong>微信 / 电话</strong>
+        <span>请邮件联系后获取</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="contact-note fade-in">
+    <div style="font-size:28px; flex-shrink:0">🎯</div>
+    <p>
+      目前正在积极 <strong>寻找前端 / 全栈实习岗位</strong>，可立即入职。
+      欢迎面试官通过邮件联系，我可以随时提供项目演示（服务器已部署）、代码讲解与技术交流。
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <!-- <p>// Built with HTML · CSS · Vanilla JS — 可部署至 GitHub Pages</p> -->
+  <p>© 2025 · 花尾鸽 · All rights reserved</p>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Stagger children of stats bar
+  document.querySelectorAll('.stat-item').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 100}ms`;
+  });
+
+  // Smooth active nav highlighting
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      if (window.scrollY >= top) current = section.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === `#${current}` 
+        ? 'var(--accent)' : '';
+    });
+  });
+
+  // Lightbox functionality
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+
+  function openLightbox(element) {
+    const img = element.querySelector('img');
+    if (img) {
+      lightboxImg.src = img.src;
+      lightboxCaption.textContent = img.alt;
+      lightbox.style.display = 'flex';
+      // Force reflow to enable transition
+      void lightbox.offsetWidth;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    setTimeout(() => {
+      lightbox.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 300);
+  }
+
+  // Close lightbox on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+</body>
+</html>
